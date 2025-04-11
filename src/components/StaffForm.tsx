@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { supabase } from '../lib/supabase';
 import { useAuth } from '../hooks/useAuth';
 import { UserPlus, AlertCircle, Loader2 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';

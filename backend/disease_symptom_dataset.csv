@@ -1,0 +1,26 @@
+symptom1,symptom2,symptom3,disease,doctor,schedule,image_data
+fever,cough,fatigue,Common Cold,Dr. Sarah Johnson,9:00 AM - 5:00 PM
+fever,headache,body ache,Influenza,Dr. Michael Chen,10:00 AM - 6:00 PM
+cough,shortness of breath,chest pain,Pneumonia,Dr. Emily Rodriguez,8:00 AM - 4:00 PM
+headache,nausea,sensitivity to light,Migraine,Dr. James Wilson,9:00 AM - 5:00 PM
+sore throat,difficulty swallowing,fever,Strep Throat,Dr. Lisa Thompson,10:00 AM - 6:00 PM
+runny nose,sneezing,congestion,Allergies,Dr. David Anderson,8:00 AM - 4:00 PM
+abdominal pain,nausea,vomiting,Gastroenteritis
+joint pain,stiffness,swelling,Arthritis
+rash,itching,redness,Skin Allergy,Dr. Emma Wilson,8:00 AM - 4:00 PM
+chest pain,sweating,shortness of breath,Heart Disease
+fever,cough,loss of taste or smell,COVID-19,Dr. Robert Martinez,9:00 AM - 5:00 PM
+high blood sugar,frequent urination,increased thirst,Diabetes
+persistent sadness,lack of energy,loss of interest,Depression
+unexplained weight loss,night sweats,lymph node swelling,Tuberculosis
+fever,bleeding gums,joint pain,Dengue
+chills,fever,sweating,Malaria
+memory loss,confusion,difficulty speaking,Alzheimer's Disease
+seizures,loss of consciousness,staring spells,Epilepsy
+muscle weakness,vision problems,balance issues,Multiple Sclerosis
+weight gain,irregular periods,acne,Polycystic Ovary Syndrome
+burning urination,frequent urge to urinate,pelvic pain,Urinary Tract Infection
+bloating,pelvic pain,irregular bleeding,Ovarian Cancer
+bloody stools,abdominal pain,weight loss,Colon Cancer
+fatigue,pale skin,shortness of breath,Anemia
+yellow skin,dark urine,abdominal pain,Hepatitis

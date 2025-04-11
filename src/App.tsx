@@ -11,6 +11,9 @@ import StaffManagement from './pages/StaffManagement';
 import ForecastsPage from './pages/ForecastsPage';
 import ResourcesPage from './pages/ResourcesPage';
 import CalendarPage from './pages/CalendarPage';
+import FloatingChatbot from './components/FloatingChatbot';
+import ChatbotAssistant from './pages/ChatbotAssistant';
+import UploadData from './pages/UploadData';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
@@ -23,8 +26,11 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 // Layout component that includes the Navbar and renders children via Outlet
 const DashboardLayout: React.FC = () => {
   return (
-    <div className="h-screen w-full overflow-hidden">
+    <div className="h-screen w-full overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950">
       <Navbar />
+      <div className="md:ml-64 h-full pt-12 overflow-auto">
+        <Outlet />
+      </div>
     </div>
   );
 };
@@ -45,17 +51,20 @@ function App() {
               </ProtectedRoute>
             }>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/patients" element={<PatientManagement />} />
               <Route path="/staff" element={<StaffManagement />} />
               <Route path="/forecasts" element={<ForecastsPage />} />
               <Route path="/resources" element={<ResourcesPage />} />
               <Route path="/calendar" element={<CalendarPage />} />
-              <Route path="/upload" element={<Dashboard />} />
+              <Route path="/upload" element={<UploadData />} />
+              <Route path="/chatbot-assistant" element={<ChatbotAssistant />} />
             </Route>
             
             {/* Catch all redirect */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          <FloatingChatbot />
         </Router>
       </AuthProvider>
     </ThemeProvider>

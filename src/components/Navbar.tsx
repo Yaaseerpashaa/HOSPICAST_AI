@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import ThemeToggle from './ThemeToggle';
 import { 
@@ -35,7 +35,8 @@ const Navbar: React.FC = () => {
     { name: 'Upload Data', path: '/upload', icon: Upload }
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path || 
+    (path === '/' && location.pathname === '/dashboard');
 
   return (
     <>
@@ -109,30 +110,24 @@ const Navbar: React.FC = () => {
         </div>
       </aside>
 
-      {/* Main content */}
-      <div className="md:ml-64 flex flex-col h-full">
-        <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 h-12 fixed top-0 right-0 left-0 md:left-64 z-20">
-          <div className="px-3 h-full flex items-center justify-end">
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                  <span className="relative">
-                    <Users className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-2.5 h-2.5 text-[8px] flex items-center justify-center text-white">3</span>
-                  </span>
-                </div>
+      {/* Main header - Content will be rendered by the Outlet in App.tsx */}
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 h-12 fixed top-0 right-0 left-0 md:left-64 z-20">
+        <div className="px-3 h-full flex items-center justify-end">
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                <span className="relative">
+                  <Users className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                  <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-2.5 h-2.5 text-[8px] flex items-center justify-center text-white">3</span>
+                </span>
               </div>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium">
-                Export Report
-              </button>
             </div>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium">
+              Export Report
+            </button>
           </div>
-        </header>
-        
-        <main className="pt-12 h-full overflow-auto">
-          <Outlet />
-        </main>
-      </div>
+        </div>
+      </header>
     </>
   );
 };

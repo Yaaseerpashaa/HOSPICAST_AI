@@ -1,228 +1,178 @@
-import React, { useState } from 'react';
-import { 
-  ArrowRight, 
-  Users, 
-  Bed, 
-  Activity 
-} from 'lucide-react';
-import BackgroundPattern from '../components/BackgroundPattern';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
-
-const admissionsData = [
-  { day: 'Mon', actual: 35, forecast: 32 },
-  { day: 'Tue', actual: 38, forecast: 35 },
-  { day: 'Wed', actual: 45, forecast: 42 },
-  { day: 'Thu', actual: 40, forecast: 45 },
-  { day: 'Fri', actual: 48, forecast: 44 },
-  { day: 'Sat', actual: 35, forecast: 38 },
-  { day: 'Sun', actual: 32, forecast: 30 },
-];
-
-const resourceData = [
-  { resource: 'ICU Beds', current: 18, forecast: 22, capacity: 25, usage: 72 },
-  { resource: 'General Beds', current: 120, forecast: 135, capacity: 150, usage: 80 },
-  { resource: 'Ventilators', current: 12, forecast: 15, capacity: 20, usage: 60 },
-  { resource: 'Staff', current: 45, forecast: 52, capacity: 55, usage: 82 },
-  { resource: 'Operating Rooms', current: 6, forecast: 8, capacity: 10, usage: 60 },
-];
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 const Dashboard: React.FC = () => {
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  
+  const isDark = theme === "dark";
+  const navigate = useNavigate();
+
+  const metrics = {
+    forecasted_admissions: { value: 42, change: '+11% from yesterday' },
+    icu_beds: { value: 22, detail: '18/25 currently in use' },
+    staff_needed: { value: 52, detail: '45 currently on-shift' },
+    avg_los: { value: 4.2, unit: 'days' }
+  };
+
+  const admissionsData = {
+    actual: [35, 38, 45, 40, 48, 35, 32],
+    forecast: [32, 35, 42, 45, 43, 38, 30],
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  };
+
+  const resources = [
+    { name: 'ICU Beds', current: 18, forecast: 22, capacity: 25 },
+    { name: 'General Beds', current: 120, forecast: 135, capacity: 150 },
+    { name: 'Ventilators', current: 12, forecast: 15, capacity: 20 },
+    { name: 'Staff', current: 45, forecast: 52, capacity: 55 },
+    { name: 'Operating Rooms', current: 6, forecast: 8, capacity: 10 }
+  ];
+
   return (
-    <div className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-indigo-950">
-      <BackgroundPattern variant="dashboard" />
-      
-      <div className="relative z-10 p-3 md:p-4">
-        <div className="max-w-7xl mx-auto">
-          <header className="mb-4">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              HospiCast AI
-            </h1>
-            <div className="flex overflow-x-auto scrollbar-hide gap-2 md:gap-4 border-b border-gray-200 dark:border-gray-700 pb-2">
-              <button className="px-3 py-1 text-blue-600 dark:text-blue-400 border-b-2 border-blue-500 font-medium whitespace-nowrap">
-                Overview
-              </button>
-              <button className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium whitespace-nowrap">
-                Patients
-              </button>
-              <button className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium whitespace-nowrap">
-                Resources
-              </button>
-              <button className="px-3 py-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium whitespace-nowrap">
-                Staff
-              </button>
-            </div>
-          </header>
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-2xl font-semibold">HospiCast AI</h1>
+          <nav className="flex space-x-4">
+            <button
+              onClick={() => navigate('/overview')}
+              className={`px-4 py-2 rounded-lg ${isDark ? 'text-blue-400' : 'text-blue-600'}`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => navigate('/patients')}
+              className={`px-4 py-2 rounded-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+            >
+              Patients
+            </button>
+            <button
+              onClick={() => navigate('/resources')}
+              className={`px-4 py-2 rounded-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+            >
+              Resources
+            </button>
+            <button
+              onClick={() => navigate('/staff')}
+              className={`px-4 py-2 rounded-lg ${isDark ? 'text-gray-400' : 'text-gray-600'}`}
+            >
+              Staff
+            </button>
+          </nav>
+        </div>
 
-          {/* Stat Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-4">
-            {/* Forecasted Admissions */}
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-3 md:p-4 shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-              <div className="absolute top-3 right-3">
-                <ArrowRight className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-              </div>
-              <h3 className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">Forecasted Admissions</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">42</span>
-                <span className="text-xs text-green-600 dark:text-green-400 mb-1">+11% from yesterday</span>
-              </div>
+        {/* Metrics Overview */}
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-sm text-gray-500">Forecasted Admissions</h3>
+            <div className="flex items-baseline">
+              <span className="text-2xl font-bold">{metrics.forecasted_admissions.value}</span>
+              <span className="ml-2 text-xs text-green-500">{metrics.forecasted_admissions.change}</span>
             </div>
-
-            {/* ICU Beds Required */}
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-3 md:p-4 shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-              <div className="absolute top-3 right-3">
-                <Bed className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-              </div>
-              <h3 className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">ICU Beds Required</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">22</span>
-                <span className="text-xs text-gray-600 dark:text-gray-400 mb-1">18/25 currently in use</span>
-              </div>
-            </div>
-
-            {/* Staff Needed */}
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-3 md:p-4 shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-              <div className="absolute top-3 right-3">
-                <Users className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-              </div>
-              <h3 className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">Staff Needed</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">52</span>
-                <span className="text-xs text-gray-600 dark:text-gray-400 mb-1">45 currently on-shift</span>
-              </div>
-            </div>
-
-            {/* Average Length of Stay */}
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-3 md:p-4 shadow-lg border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-              <div className="absolute top-3 right-3">
-                <Activity className="h-5 w-5 text-blue-500 dark:text-blue-400" />
-              </div>
-              <h3 className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">Avg. Length of Stay</h3>
-              <div className="flex items-end gap-2">
-                <span className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">4.2</span>
-                <span className="text-2xl md:text-3xl font-bold text-gray-400 dark:text-gray-500">days</span>
-              </div>
-              <span className="text-xs text-gray-600 dark:text-gray-400">Based on current patient mix</span>
+          </div>
+          
+          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-sm text-gray-500">ICU Beds Required</h3>
+            <div className="flex items-baseline">
+              <span className="text-2xl font-bold">{metrics.icu_beds.value}</span>
+              <span className="ml-2 text-xs text-gray-500">{metrics.icu_beds.detail}</span>
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-            {/* Chart */}
-            <div className="lg:col-span-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-3 md:p-4 shadow-lg border border-gray-100 dark:border-gray-700">
-              <div className="flex justify-between items-center mb-3">
-                <div>
-                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">7-Day Admissions Forecast</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Projected patient admissions for the next week</p>
-                </div>
-              </div>
-              
-              <div className="h-[250px] md:h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={admissionsData}
-                    margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "#4B5563" : "#E5E7EB"} opacity={0.2} />
-                    <XAxis 
-                      dataKey="day" 
-                      stroke={isDark ? "#D1D5DB" : "#4B5563"}
-                      tick={{ fill: isDark ? "#D1D5DB" : "#4B5563" }}
-                    />
-                    <YAxis 
-                      stroke={isDark ? "#D1D5DB" : "#4B5563"}
-                      tick={{ fill: isDark ? "#D1D5DB" : "#4B5563" }}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: isDark ? 'rgba(17, 24, 39, 0.8)' : 'rgba(255, 255, 255, 0.9)',
-                        border: `1px solid ${isDark ? '#4B5563' : '#E5E7EB'}`,
-                        borderRadius: '8px',
-                        color: isDark ? '#F3F4F6' : '#1F2937',
-                      }}
-                    />
-                    <Bar 
-                      name="Actual Admissions" 
-                      dataKey="actual" 
-                      fill="#3B82F6" 
-                      radius={[4, 4, 0, 0]}
-                    />
-                    <Bar 
-                      name="Forecasted Admissions" 
-                      dataKey="forecast" 
-                      fill="#10B981" 
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="flex justify-center mt-2 gap-4">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-blue-500 rounded-sm mr-2"></div>
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Actual Admissions</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-sm mr-2"></div>
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Forecasted Admissions</span>
-                </div>
-              </div>
+          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-sm text-gray-500">Staff Needed</h3>
+            <div className="flex items-baseline">
+              <span className="text-2xl font-bold">{metrics.staff_needed.value}</span>
+              <span className="ml-2 text-xs text-gray-500">{metrics.staff_needed.detail}</span>
             </div>
+          </div>
 
-            {/* Resource Utilization */}
-            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-3 md:p-4 shadow-lg border border-gray-100 dark:border-gray-700">
-              <div className="mb-3">
-                <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">Resource Utilization</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Current and forecasted resource usage</p>
-              </div>
-              
-              <div className="overflow-x-auto">
-                <table className="min-w-full">
-                  <thead>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <th className="text-left text-xs font-medium uppercase tracking-wider py-2 text-gray-700 dark:text-gray-300">Resource</th>
-                      <th className="text-center text-xs font-medium uppercase tracking-wider py-2 text-gray-700 dark:text-gray-300">Current</th>
-                      <th className="text-center text-xs font-medium uppercase tracking-wider py-2 text-gray-700 dark:text-gray-300">Forecast</th>
-                      <th className="text-center text-xs font-medium uppercase tracking-wider py-2 text-gray-700 dark:text-gray-300">Capacity</th>
-                      <th className="text-center text-xs font-medium uppercase tracking-wider py-2 text-gray-700 dark:text-gray-300">Util%</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {resourceData.map((item, index) => (
-                      <tr key={index} className={index < resourceData.length - 1 ? "border-b border-gray-200 dark:border-gray-700" : ""}>
-                        <td className="py-2 text-sm font-medium text-gray-900 dark:text-white">{item.resource}</td>
-                        <td className="py-2 text-sm text-center text-gray-700 dark:text-gray-300">{item.current}</td>
-                        <td className="py-2 text-sm text-center text-gray-700 dark:text-gray-300">{item.forecast}</td>
-                        <td className="py-2 text-sm text-center text-gray-700 dark:text-gray-300">{item.capacity}</td>
-                        <td className="py-2">
-                          <div className="flex items-center justify-center">
-                            <div className="w-16 md:w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full ${
-                                  item.usage >= 80 ? 'bg-red-500' : 
-                                  item.usage >= 60 ? 'bg-yellow-500' : 'bg-green-500'
-                                }`} 
-                                style={{ width: `${item.usage}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-sm text-gray-500">Avg. Length of Stay</h3>
+            <div className="flex items-baseline">
+              <span className="text-2xl font-bold">{metrics.avg_los.value}</span>
+              <span className="ml-2 text-xs text-gray-500">{metrics.avg_los.unit}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-4 gap-4">
+          {/* 7-Day Admissions Forecast */}
+          <div className={`col-span-3 p-4 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-lg font-semibold mb-2">7-Day Admissions Forecast</h3>
+            <p className="text-sm text-gray-500 mb-4">Projected patient admissions for the next week</p>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={admissionsData.days.map((day, index) => ({
+                    day,
+                    actual: admissionsData.actual[index],
+                    forecast: admissionsData.forecast[index]
+                  }))}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1F2937' : '#E5E7EB'} />
+                  <XAxis 
+                    dataKey="day" 
+                    stroke={isDark ? '#9CA3AF' : '#6B7280'}
+                    tickLine={false}
+                  />
+                  <YAxis 
+                    stroke={isDark ? '#9CA3AF' : '#6B7280'}
+                    domain={[0, 60]}
+                    ticks={[0, 15, 30, 45, 60]}
+                    tickLine={false}
+                  />
+                  <Bar 
+                    name="Actual Admissions"
+                    dataKey="actual" 
+                    fill="#2563EB" // Deep blue for actual
+                    radius={[4, 4, 0, 0]}
+                    opacity={0.9}
+                  />
+                  <Bar 
+                    name="Forecasted Admissions"
+                    dataKey="forecast" 
+                    fill="#10B981" // Rich green for forecast
+                    radius={[4, 4, 0, 0]}
+                    opacity={0.9}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Resource Utilization */}
+          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className="text-lg font-semibold mb-2">Resource Utilization</h3>
+            <p className="text-sm text-gray-500 mb-4">Current and forecasted resource usage</p>
+            <div className="space-y-4">
+              {resources.map((resource, index) => (
+                <div key={index}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>{resource.name}</span>
+                    <div className="text-right">
+                      <span className="mr-2">{resource.current}</span>
+                      <span className="text-cyan-400">{resource.forecast}</span>
+                      <span className="ml-2">{resource.capacity}</span>
+                    </div>
+                  </div>
+                  <div className="w-full h-2 bg-gray-700 rounded">
+                    <div
+                      className={`h-full rounded ${
+                        (resource.current / resource.capacity) * 100 > 90 
+                          ? 'bg-red-500' 
+                          : (resource.current / resource.capacity) * 100 > 75
+                          ? 'bg-yellow-500'
+                          : 'bg-cyan-400'
+                      }`}
+                      style={{ width: `${(resource.current / resource.capacity) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -231,4 +181,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
