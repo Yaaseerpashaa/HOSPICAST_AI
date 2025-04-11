@@ -1,0 +1,61 @@
+# 🏥 HospiCast AI – Smart Hospital Resource Forecasting & Optimization
+
+HospiCast AI is an AI-powered system designed to predict hospital resource demands (admissions, bed usage, ICU needs, etc.) up to 7 days and 6 months in advance. Built for healthcare teams to plan smarter staffing, bed allocation, and equipment usage – helping reduce overload, optimize care, and prepare for peak demand.
+
+---
+
+## 🚀 Features
+
+### ✅ Core Functionalities
+- 📅 *7-Day Forecasting*: Accurate short-term forecasts of:
+  - Patient admissions
+  - ICU needs
+  - Average length of stay
+  - Bed occupancy
+- 📆 *6-Month Forecasting*: Long-term planning for:
+  - Resource scaling
+  - Seasonal disease trends
+  - Equipment/staffing investment
+
+### 🧠 ML-Driven Predictions
+- Trained on historical hospital and simulation data
+- Real ML models integrated using *FastAPI*
+- Uses models like *Facebook Prophet, **XGBoost, or **LSTM*
+
+### 👨‍⚕ Hospital Dashboard (React Frontend)
+- Login/Register system with *JWT authentication*
+- Upload CSV data or use default simulation
+- Visualize 7-day & 6-month forecasts (charts + insights)
+- View daily ICU/beds/equipment projections
+
+### 🔐 Authentication
+- JWT-based user auth (Login, Logout, Register)
+- Admin panel access for super users
+
+### 📦 Tech Stack
+| Frontend | Backend | ML | Auth | Deployment |
+|----------|---------|----|------|------------|
+| React + Tailwind | FastAPI | Prophet / XGBoost | JWT | Vercel + Render |
+
+---
+
+## 📊 Sample Inputs
+
+| date       | admissions | icu_patients | avg_stay | beds_available | staff_on_duty | ventilator_usage |
+|------------|------------|--------------|----------|----------------|----------------|------------------|
+| 2024-01-01 | 45         | 9            | 4.2      | 120            | 18             | 7                |
+
+---
+
+## 📈 Output JSON
+
+```json
+[
+  {
+    "date": "2025-04-12",
+    "predicted_admissions": 67,
+    "predicted_icu": 12,
+    "predicted_avg_stay": 4.2,
+    "predicted_bed_occupancy": 87
+  }
+]
