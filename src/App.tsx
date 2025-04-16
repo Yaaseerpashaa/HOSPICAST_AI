@@ -1,21 +1,30 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { AuthProvider, useAuth } from './hooks/useAuth';
-import { ThemeProvider } from './hooks/useTheme';
-import Navbar from './components/Navbar';
-import Dashboard from './pages/Dashboard';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import PatientManagement from './pages/PatientManagement';
-import StaffManagement from './pages/StaffManagement';
-import ForecastsPage from './pages/ForecastsPage';
-import ResourcesPage from './pages/ResourcesPage';
-import CalendarPage from './pages/CalendarPage';
-import FloatingChatbot from './components/FloatingChatbot';
-import ChatbotAssistant from './pages/ChatbotAssistant';
-import UploadData from './pages/UploadData';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
+import { ThemeProvider } from "./hooks/useTheme";
+import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import PatientManagement from "./pages/PatientManagement";
+import StaffManagement from "./pages/StaffManagement";
+import ForecastsPage from "./pages/ForecastsPage";
+import ResourcesPage from "./pages/ResourcesPage";
+import CalendarPage from "./pages/CalendarPage";
+import FloatingChatbot from "./components/FloatingChatbot";
+import ChatbotAssistant from "./pages/ChatbotAssistant";
+import UploadData from "./pages/UploadData";
+import { Toaster } from "react-hot-toast";
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { user } = useAuth();
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -40,16 +49,19 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <Router>
+          <Toaster position="top-right" />
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
+
             {/* Protected routes with dashboard layout */}
-            <Route element={
-              <ProtectedRoute>
-                <DashboardLayout />
-              </ProtectedRoute>
-            }>
+            <Route
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/patients" element={<PatientManagement />} />
@@ -60,7 +72,7 @@ function App() {
               <Route path="/upload" element={<UploadData />} />
               <Route path="/chatbot-assistant" element={<ChatbotAssistant />} />
             </Route>
-            
+
             {/* Catch all redirect */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

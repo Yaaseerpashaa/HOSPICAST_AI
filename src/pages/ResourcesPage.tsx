@@ -92,7 +92,7 @@ const initialWards = [
 ];
 
 const ResourcesPage: React.FC = () => {
-  const { theme } = useTheme();
+  useTheme();
 // Removed unused isDark variable
   const [wards, setWards] = useState(initialWards);
   const [selectedWardType, setSelectedWardType] = useState<string>('all');
